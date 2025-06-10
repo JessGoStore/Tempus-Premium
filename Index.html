@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tempus Premium</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      font-size: 1.5rem;
+    }
+    nav {
+      position: relative;
+    }
+    nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+    }
+    /* Menu marcas começa escondido */
+    .menu-marcas {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      display: none; /* escondido inicialmente */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+      width: 320px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      
+    }
+    .menu-marcas.active {
+      display: grid;
+    }
+    .menu-marcas button {
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      color: #000;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+    }
+    .menu-marcas button:hover {
+      background-color: #eee;
+    }
+    .hero {
+      background: url('https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260') no-repeat
+        center center/cover;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 0 10px black;
+    }
+    .hero h2 {
+      font-size: 3rem;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .filtro-categorias {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
+    .filtro-categorias button {
+      padding: 10px 15px;
+      border: none;
+      background: #000;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .filtro-categorias button:hover {
+      background: #333;
+    }
+    .produtos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .produto {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .produto:hover {
+      transform: translateY(-5px);
+    }
+    .produto img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .produto h3 {
+      margin: 15px 0 10px;
+    }
+    .produto p {
+      margin-bottom: 10px;
+    }
+    .produto button {
+      background: #000;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+      min-width: 120px;
+    }
+    .produto button:hover {
+      background: #444;
+    }
+    footer {
+      background: #000;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    .carrinho {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      width: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: none;
+      z-index: 1500;
+    }
+    #contador-carrinho {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 7px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      user-select: none;
+      pointer-events: none;
+      min-width: 20px;
+      text-align: center;
+    }
+    .carrinho button.finalizar {
+      background-color: #28a745; /* verde */
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .carrinho button.finalizar:hover {
+      background-color: #218838; /* verde mais escuro */
+    }
+
+
+    .carrinho h4 {
+      margin-bottom: 10px;
+    }
+    .carrinho ul {
+      list-style: none;
+      padding: 0;
+    }
+    .carrinho li {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .carrinho button.remover {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .icone-carrinho {
+      cursor: pointer;
+      font-size: 1.5rem;
+      margin-left: 20px;
+    }
+
+    .carrossel {
+      position: relative;
+      width: 100%;
+      max-height: 200px;
+      overflow: hidden;
+    }
+    .carrossel img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .carrossel button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    .carrossel .anterior {
+      left: 10px;
+    }
+    .carrossel .proximo {
+      right: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relógios Premium</h1>
+    <nav>
+      <a href="#">Início</a>
+      <a id="menu-modelos" href="javascript:void(0)">Modelos</a>
+      <a href="#contato">Contato</a>
+      <div style="position: relative; display: inline-block; cursor: pointer;" onclick="toggleCarrinho()">
+        <i class="fas fa-shopping-cart icone-carrinho"></i>
+        <span id="contador-carrinho">0</span>
+      </div>
+
+      <div id="lista-marcas" class="menu-marcas">
+        <button onclick="filtrarPorMarca('Armani')">Armani</button>
+        <button onclick="filtrarPorMarca('Audemars Piguet')">Audemars Piguet</button>
+        <button onclick="filtrarPorMarca('Baume & Mercier')">Baume & Mercier</button>
+        <button onclick="filtrarPorMarca('Breitling')">Breitling</button>
+        <button onclick="filtrarPorMarca('Cartier')">Cartier</button>
+        <button onclick="filtrarPorMarca('Casio')">Casio</button>
+        <button onclick="filtrarPorMarca('Diesel')">Diesel</button>
+        <button onclick="filtrarPorMarca('ETA')">ETA</button>
+        <button onclick="filtrarPorMarca('Fossil')">Fossil</button>
+        <button onclick="filtrarPorMarca('Vasasce')">Vasasce</button>
+        <button onclick="filtrarPorMarca('Vacheron Constantin')">Vacheron Constantin</button>
+        <button onclick="filtrarPorMarca('Tissot')">Tissot</button>
+        <button onclick="filtrarPorMarca('Tag Heuer')">Tag Heuer</button>
+        <button onclick="filtrarPorMarca('Rolex')">Rolex</button>
+        <button onclick="filtrarPorMarca('Richard Mille')">Richard Mille</button>
+        <button onclick="filtrarPorMarca('Roger Dubuis')">Roger Dubuis</button>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Estilo e Elegância ao Seu Alcance</h2>
+  </section>
+
+  <div class="filtro-categorias">
+    <button onclick="filtrarProdutos('todos')">Todos</button>
+    <button onclick="filtrarProdutos('luxo')">Luxo</button>
+    <button onclick="filtrarProdutos('esportivo')">Esportivo</button>
+    <button onclick="filtrarProdutos('casual')">Casual</button>
+  </div>
+
+  <section class="produtos" id="produtos"></section>
+
+  <div class="carrinho" id="carrinho">
+    <h4>Carrinho</h4>
+    <ul id="lista-carrinho"></ul>
+    <p class="total" id="total">Total: R$ 0,00</p>
+    <button class="finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Relógios Premium. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    const produtos = [
+      {
+        nome: 'Patek Philippe Grandmaster Chime',
+        preco: 2500,
+        categoria: 'luxo',
+        marca: 'Patek',
+        imagens: [
+          'Patek1.jpg',
+          "Patek2.jpg",
+        
+        ]
+      },
+      {
+        nome: 'Rolex Cosmograph Daytona',
+        preco: 1500,
+        categoria: 'Luxo',
+        marca: 'Rolex',
+        imagens:[
+          'Rolex Cosmograph Daytona.jpg',
+        ]
+      
+      },
+      {
+        nome: 'Richard Mille RM 11-01 Roberto Mancini Chronograph Flyback',
+        preco: 800,
+        categoria: 'Luxo',
+        marca: 'Richard Mille',
+        imagens:[
+           'Richard Mille RM 11-01 Roberto Mancini Chronograph.jpg',
+        ]
+      },
+      {
+        nome: 'Audemars Piguet Royal Oak Double Balance',
+        preco: 3500,
+        categoria: 'luxo',
+        marca: 'Audemars Piguet',
+        imagens: [
+          'Audemars Piguet Royal Oak Double Balance.jpg',
+        ]
+    
+      },
+      {
+        nome: 'Relógio Diesel Mega Chief Masc Crono Aço Inox',
+        preco: 979,
+        categoria: 'casual',
+        marca: 'Diesel',
+        imagens: [
+          'diesel1.jpg',
+          //'diesel2.jpg',
+          //'diesel3.jpg',
+         // 'diesel4.jpg'
+        ]
+        
+      },
+      {
+        nome: 'Breitling Navitimer World',
+        preco: 650,
+        categoria: 'casual',
+        marca: 'Armani',
+        imagens: [
+          'Breitling Navitimer World.jpg',
+        ]
+      },
+      {
+        nome: 'Breitling Superocean Heritage',
+        preco: 650,
+        categoria: 'luxo',
+        marca: 'Breitling',
+        imagens: [
+          'Breitling Superocean Heritage.jpg',
+        ]
+      },
+      
+      {
+        nome: 'Breitling Bentley Motors A25362',
+        preco: 650,
+        categoria: 'luxo',
+        marca: 'Breitling',
+        imagens: [
+          'Breitling Bentley Motors A25362.jpg',
+        ]
+      },
+      {
+        nome: 'Cartier Santos de Cartier Large W2SA0009',
+        preco: 650,
+        categoria: 'luxo',
+        marca: 'Cartier',
+        imagens: [
+          'Cartier Santos de Cartier Large W2SA0009.jpg',
+        ]
+      },
+
+      {
+
+        nome: 'Rolex Cosmograph Daytona 126518LN',
+
+        preco: 900,
+        categoria: 'luxo',
+        marca: 'Rolex',
+        imagens: [
+          'Rolex Cosmograph Daytona 126518LN.jpg',
+        ]
+      },
+      {
+        nome: 'Patek Philippe Annual Calendar 5205G-013',
+        preco: 1200,
+        categoria: 'luxo',
+        marca: 'Patek',
+        imagens: [
+          'Patek Philippe Annual Calendar 5205G-013.jpg',
+        ]
+      },
+      {
+        nome: 'Rolex Cosmograph Daytona 126518LN',
+        preco: 900,
+        categoria: 'luxo',
+        marca: 'Rolex',
+        imagens: [
+          'Rolex Cosmograph Daytona 126518LN.jpg',
+        ]
+      },
+      {
+        nome: 'Rolex Cosmograph Daytona 126518LN',
+        preco: 900,
+        categoria: 'luxo',
+        marca: 'Rolex',
+        imagens: [
+          'Rolex Cosmograph Daytona 126518LN.jpg',
+        ]
+      },
+           
+    ];
+
+    let carrinho = [];
+
+// Renderiza os produtos
+function renderizarProdutos(listaProdutos) {
+  const container = document.getElementById('produtos');
+  container.innerHTML = '';
+  listaProdutos.forEach((produto) => {
+    const div = document.createElement('div');
+    div.className = 'produto';
+    div.innerHTML = `
+      <div class="carrossel">
+        <img src="${produto.imagens[0]}" alt="${produto.nome}" class="img-carrossel" />
+        <button class="anterior" onclick="mudarImagem(this, -1)">❮</button>
+        <button class="proximo" onclick="mudarImagem(this, 1)">❯</button>
+     // </div>
+      <h3>${produto.nome}</h3>
+      <p>Marca: ${produto.marca}</p>
+      <p>R$ ${produto.preco.toFixed(2).replace('.', ',')}</p>
+      <button onclick='adicionarAoCarrinho(${JSON.stringify(produto)})'>Adicionar à Sacola</button>
+      <button onclick='comprarAgora(${JSON.stringify(produto)})'>Comprar Agora</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Adiciona produto ao carrinho
+function adicionarAoCarrinho(produto) {
+  carrinho.push(produto);
+  atualizarCarrinho();
+}
+
+// Comprar agora: adiciona e abre carrinho
+function comprarAgora(produto) {
+  adicionarAoCarrinho(produto);
+  abrirCarrinho();
+}
+    // Filtra por categoria
+    function filtrarProdutos(categoria) {
+      if (categoria === 'todos') {
+        renderizarProdutos(produtos);
+      } else {
+        const filtrados = produtos.filter(p => p.categoria === categoria);
+        renderizarProdutos(filtrados);
+      }
+      fecharMenuMarcas();
+    }
+
+    // Filtra por marca
+    function filtrarPorMarca(marca) {
+      const filtrados = produtos.filter(p => p.marca === marca);
+      renderizarProdutos(filtrados);
+      fecharMenuMarcas();
+    }
+
+    // Gerencia menu marcas
+    const menuModelos = document.getElementById('menu-modelos');
+    const listaMarcas = document.getElementById('lista-marcas');
+
+    menuModelos.addEventListener('click', () => {
+      listaMarcas.classList.toggle('active');
+    });
+
+    // Fecha menu marcas
+    function fecharMenuMarcas() {
+      listaMarcas.classList.remove('active');
+    }
+
+
+    // Atualiza visual do carrinho
+    function atualizarCarrinho() {
+      const lista = document.getElementById('lista-carrinho');
+      lista.innerHTML = '';
+      carrinho.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${item.nome} - R$ ${item.preco.toFixed(2).replace('.', ',')}
+          <button class="remover" onclick="removerDoCarrinho(${i})">X</button>
+      `;
+      lista.appendChild(li);
+    });
+    atualizarTotal();
+
+    // Atualiza o contador no ícone
+    const contador = document.getElementById('contador-carrinho');
+    contador.textContent = carrinho.length;
+  }
+
+    // Remove item do carrinho
+    function removerDoCarrinho(index) {
+      carrinho.splice(index, 1);
+      atualizarCarrinho();
+    }
+    function toggleCarrinho() {
+      const carrinhoEl = document.getElementById('carrinho');
+      if (carrinho.length === 0) {
+        carrinhoEl.style.display = 'none'; // Garante que fique fechado
+        return; // Não faz nada se estiver vazio
+      }
+
+      // Alterna visibilidade se houver produtos
+      carrinhoEl.style.display = carrinhoEl.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Atualiza total
+    function atualizarTotal() {
+      const totalElem = document.getElementById('total');
+      const total = carrinho.reduce((acc, item) => acc + item.preco, 0);
+      totalElem.textContent = 'Total: R$ ' + total.toFixed(2).replace('.', ',');
+    }
+
+    // Abre e fecha carrinho
+    function abrirCarrinho() {
+      const carrinhoDiv = document.getElementById('carrinho');
+      carrinhoDiv.style.display = 'block';
+    }
+
+    function fecharCarrinho() {
+      const carrinhoDiv = document.getElementById('carrinho');
+      carrinhoDiv.style.display = 'none';
+    }
+
+    function toggleCarrinho() {
+      const carrinhoDiv = document.getElementById('carrinho');
+      if (carrinhoDiv.style.display === 'block') {
+        fecharCarrinho();
+      } else {
+        abrirCarrinho();
+      }
+    }
+
+    // Finalizar compra: abre WhatsApp com mensagem
+    function finalizarCompra() {
+      if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+      }
+
+      const numeroWhatsapp = '5531991102415'; // coloque o número do seu WhatsApp com código do país e DDD, sem espaços ou símbolos
+
+      // Monta mensagem com produtos e preços
+      let mensagem = 'Olá! Gostaria de comprar os seguintes relógios:%0A';
+      let total = 0;
+      carrinho.forEach(item => {
+        mensagem += `- ${item.nome}: R$ ${item.preco.toFixed(2).replace('.', ',')}%0A`;
+        total += item.preco;
+      });
+      mensagem += `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+
+      const url = `https://wa.me/${numeroWhatsapp}?text=${mensagem}`;
+      window.open(url, '_blank');
+    }
+
+    // Inicializa exibindo todos os produtos
+    renderizarProdutos(produtos);
+
+   function mudarImagem(botao, direcao) {
+      const carrossel = botao.parentElement;
+      const img = carrossel.querySelector('img');
+      const produtoIndex = Array.from(document.querySelectorAll('.produto')).indexOf(carrossel.closest('.produto'));
+      const imagens = produtos[produtoIndex].imagens;
+
+      let atual = imagens.indexOf(img.src);
+      let novaIndex = (atual + direcao + imagens.length) % imagens.length;
+      img.src = imagens[novaIndex];
+    }
+
+  </script>
+</body>
+</html>
